@@ -6,6 +6,7 @@ import { randomBytes } from 'node:crypto';
 const port = Number(process.argv[2] ?? process.env.SK8_PORT ?? 420);
 const publicRoot = resolve(process.env.SK8_PUBLIC_ROOT ?? 'public');
 const dataFile = resolve(process.env.SK8_DATA_FILE ?? '.data/sk8-sessions.json');
+const defaultGameId = 'keeskatez';
 const games = new Map();
 
 const emptyGame = () => ({ players: [], pendingWinner: null, screen: 'setup', winnerConfirmed: false });
@@ -31,13 +32,23 @@ loadSessions();
 
 const uid = (bytes = 16) => randomBytes(bytes).toString('base64url');
 
-function createSession() {
-  let gameId = uid(9);
-  while (games.has(gameId)) gameId = uid(9);
+function createSession(gameId = '') {
+  if (gameId && games.has(gameId)) {
+    const existing = games.get(gameId);
+    return { gameId, controlToken: existing.controlToken, overlayToken: existing.overlayToken };
+  }
+  if (!gameId) {
+    gameId = uid(9);
+    while (games.has(gameId)) gameId = uid(9);
+  }
   const session = { controlToken: uid(32), overlayToken: uid(32), state: emptyGame() };
   games.set(gameId, session);
   persistSessions();
   return { gameId, controlToken: session.controlToken, overlayToken: session.overlayToken };
+}
+
+function getDefaultSession() {
+  return createSession(defaultGameId);
 }
 
 function json(res, status, value) {
@@ -87,7 +98,7 @@ const server = createServer((req, res) => {
   const gameId = url.searchParams.get('game') || 'local-demo';
 
   if (pathname === '/api/sk8/session' && req.method === 'POST') {
-    return json(res, 201, createSession());
+    return json(res, 201, getDefaultSession());
   }
 
   if (pathname === '/api/sk8/session' && req.method === 'GET') {
