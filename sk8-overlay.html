@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SK8 overlay</title>
+</head>
+<body>
+  <p>Loading SK8 overlay…</p>
+  <script>
+    const target = new URL('public/sk8.html', window.location.href);
+    const params = new URLSearchParams(window.location.search);
+    params.set('mode', 'overlay');
+    target.search = params.toString();
+    window.location.replace(target);
+  </script>
+</body>
+</html>

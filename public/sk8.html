@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ff676d">
+  <title>SK8</title>
+  <style>
+    :root {
+      --coral: #ff676d;
+      --coral-deep: #f7262c;
+      --ink: #161a21;
+      --ink-soft: #242a33;
+      --ink-lift: #303742;
+      --pink: #f7262c;
+      --white: #fff7f0;
+      --muted: #9fa5ab;
+      --line: rgba(255,247,240,.3);
+      --shadow: 0 24px 70px rgba(32, 20, 26, .27);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: var(--white);
+      background: var(--coral);
+      font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Narrow", sans-serif;
+      letter-spacing: .025em;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible { outline: 3px solid var(--white); outline-offset: 3px; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::after {
+      content: "";
+      position: fixed;
+      inset: auto -10vw -19vh;
+      height: 42vh;
+      background: linear-gradient(135deg, rgba(255,255,255,.09), transparent 45%), var(--coral-deep);
+      clip-path: polygon(0 42%, 100% 0, 100% 100%, 0 100%);
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    .screen { width: min(100%, 540px); position: relative; z-index: 1; }
+    .screen[hidden] { display: none; }
+
+    .brand {
+      text-align: center;
+      color: var(--ink);
+      font-size: clamp(3.5rem, 15vw, 6.25rem);
+      line-height: .78;
+      letter-spacing: .05em;
+      transform: scaleX(.88);
+      text-shadow: 4px 5px 0 rgba(255,247,240,.22);
+      margin: 0 0 30px;
+    }
+
+    .panel {
+      background: var(--ink);
+      border: 3px solid var(--ink);
+      border-radius: 21px;
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,255,255,.07);
+      padding: 28px;
+    }
+
+    .setup-panel { padding: clamp(22px, 6vw, 36px); }
+    .eyebrow { margin: 0 0 8px; color: var(--pink); font-size: .92rem; letter-spacing: .15em; text-transform: uppercase; }
+    h1, h2, p { margin-top: 0; }
+    h2 { margin-bottom: 24px; color: var(--white); font-size: clamp(1.7rem, 6vw, 2.35rem); line-height: .95; text-transform: uppercase; }
+    .setup-note { margin: -8px 0 24px; color: var(--muted); font-family: Arial, sans-serif; font-size: .9rem; line-height: 1.4; }
+
+    .name-list { display: grid; gap: 10px; }
+    .name-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
+    .name-number { color: var(--muted); font-size: 1.05rem; text-align: center; }
+    .name-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px 14px;
+      color: var(--white);
+      background: var(--ink-soft);
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+    }
+    .name-input::placeholder { color: #777e87; }
+    .name-input.locked { border-color: rgba(255,104,112,.65); color: var(--pink); font-weight: 700; }
+    .add-player {
+      margin-top: 16px;
+      border: 0;
+      padding: 5px 0;
+      color: var(--pink);
+      background: transparent;
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+    .add-player:hover { color: var(--white); }
+    .start-button, .confirm-button {
+      width: 100%;
+      margin-top: 28px;
+      border: 0;
+      border-radius: 9px;
+      padding: 16px 20px;
+      color: var(--ink);
+      background: var(--pink);
+      font-size: 1.18rem;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      box-shadow: 0 8px 0 rgba(0,0,0,.2);
+    }
+    .start-button:hover, .confirm-button:hover { background: var(--white); transform: translateY(-1px); }
+    .start-button:disabled { cursor: not-allowed; color: #777e87; background: #424852; box-shadow: none; }
+
+    .board-screen { width: min(100%, 720px); }
+    .board-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin: 0 4px 18px; }
+    .board-head .brand { margin: 0; text-align: left; font-size: clamp(3rem, 10vw, 5rem); }
+    .board-label { color: var(--ink); font-family: Arial, sans-serif; font-size: .78rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .board { padding: clamp(18px, 4vw, 30px); }
+    .player-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .player-card {
+      position: relative;
+      min-height: 142px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 13px;
+      padding: 17px;
+      background: var(--ink-soft);
+      transition: transform .15s ease, border-color .15s ease, opacity .2s ease;
+    }
+    .player-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.38); }
+    .player-card.eliminated { opacity: .45; }
+    .player-card.eliminated .player-name { text-decoration: line-through; }
+    .player-name { overflow: hidden; color: var(--white); font-size: clamp(1.15rem, 4vw, 1.45rem); line-height: 1; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .status { min-height: 1em; color: var(--muted); font-family: Arial, sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .status.winner { color: var(--pink); }
+    .letters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .letter-slot {
+      position: relative;
+      min-width: 0;
+      aspect-ratio: 1.25;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 5px;
+      color: rgba(255,247,240,.22);
+      background: rgba(0,0,0,.23);
+      font-size: clamp(1.75rem, 6vw, 2.3rem);
+      line-height: 1;
+      user-select: none;
+      transition: background .15s ease, color .15s ease;
+    }
+    .letter-slot.empty { cursor: pointer; }
+    .letter-slot.empty:hover { background: rgba(255,104,112,.24); color: rgba(255,247,240,.75); }
+    .letter-slot.filled { border-color: var(--pink); color: var(--ink); background: var(--pink); }
+    .remove-letter {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--coral-deep);
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1;
+      opacity: 0;
+      transform: scale(.7);
+      transition: opacity .12s ease, transform .12s ease;
+    }
+    .letter-slot.filled:hover .remove-letter, .letter-slot.filled:focus-within .remove-letter { opacity: 1; transform: scale(1); }
+    .letter-slot.filled .remove-letter:focus-visible { opacity: 1; transform: scale(1); }
+
+    .winner-check { margin-top: 18px; padding: 18px; border: 1px solid var(--pink); border-radius: 12px; background: rgba(255,104,112,.11); text-align: center; }
+    .winner-check p { margin: 0; color: var(--white); font-size: 1rem; line-height: 1.2; text-transform: uppercase; }
+    .winner-check strong { color: var(--pink); }
+    .confirm-button { margin-top: 14px; padding: 13px 18px; font-size: 1rem; box-shadow: none; }
+
+    .session-tools { margin-top: 12px; padding: 12px 14px; border: 1px solid rgba(22,26,33,.22); border-radius: 10px; background: rgba(22,26,33,.14); }
+    .session-tools label { display: block; margin-bottom: 7px; color: var(--ink); font-family: Arial, sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .session-link-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; }
+    .session-link-row input { width: 100%; min-width: 0; border: 1px solid rgba(22,26,33,.35); border-radius: 6px; padding: 8px 9px; color: var(--ink); background: rgba(255,247,240,.7); font-family: Arial, sans-serif; font-size: .72rem; }
+    .session-link-row button { border: 0; border-radius: 6px; padding: 8px 11px; color: var(--white); background: var(--ink); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 800; }
+    .session-link-row button:hover { background: var(--coral-deep); }
+
+    .winner-screen { text-align: center; }
+    .winner-card { padding: clamp(28px, 8vw, 52px) 24px 30px; }
+    .trophy { display: block; margin: 0 auto 17px; color: var(--pink); font-family: Arial, sans-serif; font-size: 4.5rem; line-height: 1; }
+    .winner-kicker { margin-bottom: 13px; color: var(--pink); font-size: 1rem; letter-spacing: .16em; text-transform: uppercase; }
+    .winner-name { margin-bottom: 10px; color: var(--white); font-size: clamp(3rem, 14vw, 6rem); line-height: .86; text-transform: uppercase; overflow-wrap: anywhere; }
+    .winner-caption { margin: 0; color: var(--muted); font-family: Arial, sans-serif; font-size: .95rem; }
+    .new-game { margin-top: 24px; border: 0; color: var(--pink); background: transparent; font-family: Arial, sans-serif; font-weight: 700; }
+    .new-game:hover { color: var(--white); }
+
+    /* OBS/browser-source mode: only the scoreboard is visible and the page itself stays transparent. */
+    body.overlay-mode { background: transparent; }
+    .overlay-mode .app { display: block; min-height: 100vh; padding: 8px 8px 20px; }
+    .overlay-mode .app::after { display: none; }
+    .overlay-mode .setup-screen, .overlay-mode .board-head, .overlay-mode .winner-screen > .brand { display: none; }
+    .overlay-mode .board-screen, .overlay-mode .winner-screen { width: min(100%, 340px); max-width: 340px; margin: 0 auto; }
+    .overlay-mode .board { padding: 0; background: transparent; border: 0; box-shadow: none; }
+    .overlay-mode .player-grid { grid-template-columns: 1fr; gap: 4px; }
+    .overlay-mode .player-card { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 150px; grid-template-areas: "name letters" "status letters"; align-items: center; column-gap: 10px; padding: 12px 14px; background: #000; border: 2px solid var(--coral-deep); border-color: var(--coral-deep); box-shadow: 0 8px 25px rgba(0,0,0,.3); }
+    .overlay-mode .player-card.eliminated { opacity: .5; border-color: transparent; }
+    .overlay-mode .player-name { grid-area: name; font-size: 1.34rem; }
+    .overlay-mode .status { grid-area: status; margin-top: 3px; font-size: .74rem; }
+    .overlay-mode .letters { grid-area: letters; width: 150px; gap: 4px; }
+    .overlay-mode .letter-slot { aspect-ratio: 1.25; font-size: 1.62rem; background: rgba(8,10,14,.62); }
+    .overlay-mode .letter-slot.empty { color: #777e87; }
+    .overlay-mode .letter-slot.filled { color: var(--ink); background: #f7262c; border-color: #f7262c; }
+    .overlay-mode .player-grid.count-6 .player-card { min-height: 73px; }
+    .overlay-mode .player-grid.count-5 .player-card { min-height: 83px; }
+    .overlay-mode .player-grid.count-4 .player-card { min-height: 95px; }
+    .overlay-mode .player-grid.count-3 .player-card { min-height: 111px; }
+    .overlay-mode .player-grid.count-2 .player-card { min-height: 129px; padding: 16px; grid-template-columns: minmax(0, 1fr) 166px; }
+    .overlay-mode .player-grid.count-2 .player-name { font-size: 1.55rem; }
+    .overlay-mode .player-grid.count-2 .status { font-size: .82rem; }
+    .overlay-mode .player-grid.count-2 .letters { width: 166px; }
+    .overlay-mode .player-grid.count-2 .letter-slot { font-size: 1.82rem; }
+    .overlay-mode .winner-check { display: none; }
+    .overlay-mode .letter-slot { cursor: default; }
+    .overlay-mode .letter-slot.empty:hover { background: rgba(0,0,0,.23); color: rgba(255,247,240,.22); }
+    .overlay-mode .remove-letter { display: none; }
+    .overlay-mode .winner-card { max-width: 520px; margin: 0 auto; background: rgba(22,26,33,.94); }
+    .overlay-mode .trophy { font-size: 4rem; }
+    .overlay-mode .winner-name { font-size: clamp(2.4rem, 9vw, 4.5rem); }
+    .overlay-mode .winner-caption, .overlay-mode .new-game { display: none; }
+    .overlay-mode #board-screen[hidden], .overlay-mode #winner-screen[hidden] { display: none; }
+
+    @media (max-width: 480px) {
+      .app { padding: 22px 12px; }
+      .panel { border-radius: 17px; }
+      .player-grid { grid-template-columns: 1fr; }
+      .player-card { min-height: 132px; }
+      .board-head { align-items: center; }
+      .board-label { font-size: .66rem; text-align: right; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="screen" id="setup-screen" aria-labelledby="setup-title">
+      <div class="brand" aria-hidden="true">SK8</div>
+      <div class="panel setup-panel">
+        <p class="eyebrow">New game</p>
+        <h2 id="setup-title">Add your players</h2>
+        <p class="setup-note">Add between 2 and 6 names. The order will be shuffled when the game starts.</p>
+        <div class="name-list" id="name-list"></div>
+        <button class="add-player" id="add-player" type="button">+ Add player</button>
+        <button class="start-button" id="start-game" type="button" disabled>Start SK8</button>
+      </div>
+    </section>
+
+    <section class="screen board-screen" id="board-screen" hidden aria-labelledby="board-title">
+      <div class="board-head">
+        <div class="brand" id="board-title" aria-label="SK8">SK8</div>
+        <div class="board-label">Tap an empty letter<br>when a player misses</div>
+      </div>
+      <div class="panel board">
+        <div class="player-grid" id="player-grid"></div>
+        <div class="winner-check" id="winner-check" hidden>
+          <p><strong id="last-player">Player</strong> is the last one standing.</p>
+          <button class="confirm-button" id="confirm-winner" type="button">Confirm winner</button>
+        </div>
+      </div>
+      <div class="session-tools" id="session-tools" hidden>
+        <label for="overlay-url">OBS overlay link</label>
+        <div class="session-link-row">
+          <input id="overlay-url" type="text" readonly aria-label="OBS overlay link">
+          <button id="copy-overlay" type="button">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen winner-screen" id="winner-screen" hidden aria-labelledby="winner-title">
+      <div class="brand" aria-hidden="true">SK8</div>
+      <div class="panel winner-card">
+        <span class="trophy" aria-hidden="true">🏆</span>
+        <p class="winner-kicker">Winner</p>
+        <h2 class="winner-name" id="winner-title">Player</h2>
+        <p class="winner-caption">Last one standing.</p>
+        <button class="new-game" id="new-game" type="button">Start a new game</button>
+      </div>
+    </section>
+  </main>
+  <script src="./sk8-runtime.js"></script>
+</body>
+</html>
