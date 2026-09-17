@@ -59,6 +59,15 @@
     } catch (_) { return false; }
   }
 
+  function clearOverlay() {
+    if (!isOverlay) return;
+    state.players = [];
+    state.pendingWinner = null;
+    state.screen = 'setup';
+    state.winnerConfirmed = false;
+    show(setup);
+  }
+
   async function pushRemoteState() {
     try {
       await fetch(`/api/sk8/state?game=${encodeURIComponent(gameId)}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(state) });
@@ -267,13 +276,14 @@
     saveState();
     render();
   });
-  $('new-game').addEventListener('click', () => {
+  $('new-game').addEventListener('click', async () => {
     state.players = [];
     state.pendingWinner = null;
     state.screen = 'setup';
     state.winnerConfirmed = false;
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* best effort */ }
     resetSetupInputs();
+    await saveState();
     render();
   });
 
@@ -291,7 +301,10 @@
     if (isHttp) await loadRemoteState();
     else readSavedState();
     render();
-    if (isOverlay && isHttp) window.setInterval(async () => { if (await loadRemoteState()) render(); }, 750);
+    if (isOverlay && isHttp) window.setInterval(async () => {
+      if (await loadRemoteState()) render();
+      else clearOverlay();
+    }, 750);
   }
 
   init();
