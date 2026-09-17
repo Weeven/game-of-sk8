@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ff676d">
-  <title>SK8</title>
+  <title>KeeSK8</title>
   <style>
     :root {
       --coral: #ff676d;
@@ -195,6 +195,8 @@
 
     .session-tools { margin-top: 12px; padding: 12px 14px; border: 1px solid rgba(22,26,33,.22); border-radius: 10px; background: rgba(22,26,33,.14); }
     .session-tools label { display: block; margin-bottom: 7px; color: var(--ink); font-family: Arial, sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .session-help { margin: -1px 0 9px; color: rgba(22,26,33,.8); font-family: Arial, sans-serif; font-size: .76rem; line-height: 1.35; }
+    .board-obs-note { margin: 0 0 14px; color: var(--muted); font-family: Arial, sans-serif; font-size: .78rem; line-height: 1.4; }
     .session-link-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; }
     .session-link-row input { width: 100%; min-width: 0; border: 1px solid rgba(22,26,33,.35); border-radius: 6px; padding: 8px 9px; color: var(--ink); background: rgba(255,247,240,.7); font-family: Arial, sans-serif; font-size: .72rem; }
     .session-link-row button { border: 0; border-radius: 6px; padding: 8px 11px; color: var(--white); background: var(--ink); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 800; }
@@ -222,6 +224,7 @@
     .overlay-mode .setup-screen, .overlay-mode .board-head, .overlay-mode .winner-screen > .brand { display: none; }
     .overlay-mode .board-screen, .overlay-mode .winner-screen { width: min(100%, 340px); max-width: 340px; margin: 0 auto; }
     .overlay-mode .board { padding: 0; background: transparent; border: 0; box-shadow: none; }
+    .overlay-mode .board-obs-note { display: none; }
     .overlay-mode .player-grid { grid-template-columns: 1fr; gap: 4px; }
     .overlay-mode .player-card { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 150px; grid-template-areas: "name letters" "status letters"; align-items: center; column-gap: 10px; padding: 12px 14px; background: #000; border: 2px solid var(--coral-deep); border-color: var(--coral-deep); box-shadow: 0 8px 25px rgba(0,0,0,.3); }
     .overlay-mode .player-card.eliminated { opacity: .5; border-color: transparent; }
@@ -264,14 +267,14 @@
 <body>
   <main class="app">
     <section class="screen" id="setup-screen" aria-labelledby="setup-title">
-      <div class="brand" aria-hidden="true">SK8</div>
+      <div class="brand" aria-hidden="true">KeeSK8</div>
       <div class="panel setup-panel">
         <p class="eyebrow">New game</p>
         <h2 id="setup-title">Add your players</h2>
         <p class="setup-note">Add between 2 and 6 names. The order will be shuffled when the game starts.</p>
         <div class="name-list" id="name-list"></div>
         <button class="add-player" id="add-player" type="button">+ Add player</button>
-        <button class="start-button" id="start-game" type="button" disabled>Start SK8</button>
+        <button class="start-button" id="start-game" type="button" disabled>Start KeeSK8</button>
       </div>
     </section>
 
@@ -281,6 +284,7 @@
         <div class="board-label">Tap an empty letter<br>when a player misses</div>
       </div>
       <div class="panel board">
+        <p class="board-obs-note">OBS: add the overlay link below as a Browser Source. You only need to add it once, and KeeSK8 must stay running while OBS is open.</p>
         <div class="player-grid" id="player-grid"></div>
         <div class="winner-check" id="winner-check" hidden>
           <p><strong id="last-player">Player</strong> is the last one standing.</p>
@@ -289,6 +293,7 @@
       </div>
       <div class="session-tools" id="session-tools" hidden>
         <label for="overlay-url">OBS overlay link</label>
+        <p class="session-help">Copy this KeeSK8 link into OBS as a Browser Source. You only need to do this once. Keep KeeSK8 running while OBS is open. If OBS ever loses the overlay, copy the link again.</p>
         <div class="session-link-row">
           <input id="overlay-url" type="text" readonly aria-label="OBS overlay link">
           <button id="copy-overlay" type="button">Copy</button>

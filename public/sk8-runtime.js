@@ -111,7 +111,7 @@
 
   function showUidRequired() {
     if (!requiresUid || fixedUid) return false;
-    document.body.innerHTML = '<main class="access-locked"><div><div class="locked-mark">SK8</div><h1>Private game link required</h1><p>This SK8 board is only available from the streamer\'s private link.</p></div></main>';
+    document.body.innerHTML = '<main class="access-locked"><div><div class="locked-mark">SK8</div><h1>Private game link required</h1><p>This KeeSK8 board is only available from the streamer\'s private link.</p></div></main>';
     return true;
   }
 
@@ -223,7 +223,7 @@
     const names = [...list.querySelectorAll('input')].map(input => input.value.trim()).filter(Boolean);
     const kee = names.shift() || 'KeeSkatez';
     if (isHttp && !isOverlay && !fixedUid && (!controlToken || gameId === 'local-demo') && !(await createRemoteSession())) {
-      window.alert('Could not create a game session. Check that the SK8 server is running.');
+      window.alert('Could not create a game session. Check that the KeeSK8 server is running.');
       return;
     }
     state.players = shuffle([kee, ...names]).map(name => ({ name, letters: [false, false, false], eliminated: false }));

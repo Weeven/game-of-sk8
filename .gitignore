@@ -2,3 +2,4 @@ upstream/
 node_modules/
 .shade-semantic/
 .data/
+dist/

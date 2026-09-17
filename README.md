@@ -1,4 +1,4 @@
-# Game of SK8
+# KeeSK8
 
 A lightweight SK8 letter tracker for a streamer’s control window and OBS browser source.
 
@@ -11,6 +11,12 @@ node scripts/sk8-server.mjs
 ```
 
 Open `http://127.0.0.1:420/sk8` for the control window. Add `http://127.0.0.1:420/sk8-overlay` to OBS once. The “Start a new game” action reuses that same local URL and replaces only the game state behind it. The control link contains a private control token; the overlay link contains a separate read-only token.
+
+## KeeSK8 app
+
+The `KeeSK8.exe` launcher starts the local server on port 420 and opens the control page in the Windows default browser. On first launch it offers to create a KeeSK8 desktop shortcut. OBS continues to use `http://127.0.0.1:420/sk8-overlay`. KeeSK8 must stay running while OBS is using the overlay. Keep the `public` folder and `scripts` folder beside the executable; the streamer does not need to run PowerShell commands.
+
+To build it locally, run `npm install` once and then `npm run package`. The finished executable is written to `dist/KeeSK8.exe` with its required `public` and `scripts` folders.
 
 ## Hosting
 

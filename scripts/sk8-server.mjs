@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
 const port = Number(process.argv[2] ?? process.env.SK8_PORT ?? 420);
+const publicRoot = resolve(process.env.SK8_PUBLIC_ROOT ?? 'public');
 const dataFile = resolve(process.env.SK8_DATA_FILE ?? '.data/sk8-sessions.json');
 const games = new Map();
 
@@ -66,7 +67,7 @@ function cleanState(value) {
 function serveFile(res, file, type) {
   try {
     res.writeHead(200, { 'Cache-Control': 'no-store', 'Content-Type': type, 'Referrer-Policy': 'no-referrer' });
-    res.end(readFileSync(resolve('public', file)));
+    res.end(readFileSync(resolve(publicRoot, file)));
   } catch (_) {
     res.writeHead(404);
     res.end('Not found');
@@ -125,4 +126,9 @@ const server = createServer((req, res) => {
   res.end('Not found');
 });
 
-server.listen(port, '127.0.0.1', () => console.log(`SK8 local server: http://127.0.0.1:${port}/sk8.html`));
+export function startServer() {
+  server.listen(port, '127.0.0.1', () => console.log(`KeeSK8 local server: http://127.0.0.1:${port}/sk8.html`));
+  return server;
+}
+
+if (process.argv[1]?.endsWith('sk8-server.mjs')) startServer();
