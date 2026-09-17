@@ -135,10 +135,16 @@
   }
 
   function createNameInput(value = '', locked = false) {
-    const row = document.createElement('label');
+    const row = document.createElement('div');
     row.className = 'name-row';
-    row.innerHTML = `<span class="name-number" aria-hidden="true"></span><input class="name-input${locked ? ' locked' : ''}" maxlength="18" autocomplete="off" placeholder="Player name" value="${escapeHtml(value)}"${locked ? ' readonly aria-label="Player 1 KeeSkatez"' : ''}>`;
+    row.innerHTML = `<span class="name-number" aria-hidden="true"></span><div class="name-field"><input class="name-input${locked ? ' locked' : ''}" maxlength="18" autocomplete="off" placeholder="Player name" value="${escapeHtml(value)}"${locked ? ' readonly aria-label="Player 1 KeeSkatez"' : ''}>${locked ? '' : '<button class="remove-player" type="button" aria-label="Remove player">×</button>'}</div>`;
     row.querySelector('input').addEventListener('input', updateSetupState);
+    row.querySelector('.remove-player')?.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      row.remove();
+      updateSetupState();
+    });
     list.append(row);
     updateSetupState();
   }
@@ -150,9 +156,12 @@
   }
 
   function updateSetupState() {
-    [...list.children].forEach((row, index) => { row.querySelector('.name-number').textContent = String(index + 1); });
-    const count = [...list.querySelectorAll('input')].filter(input => input.value.trim()).length;
-    startGame.disabled = count < 2;
+    [...list.children].forEach((row, index) => {
+      row.querySelector('.name-number').textContent = String(index + 1);
+      row.querySelector('.remove-player')?.setAttribute('aria-label', `Remove player ${index + 1}`);
+    });
+    const inputs = [...list.querySelectorAll('input')];
+    startGame.disabled = inputs.length < 2 || inputs.some(input => !input.value.trim());
     addPlayer.hidden = list.children.length >= MAX_PLAYERS;
   }
 

@@ -94,8 +94,13 @@
       font-family: Arial, sans-serif;
       font-size: 1rem;
     }
+    .name-field { position: relative; min-width: 0; }
+    .name-field .name-input { padding-right: 42px; }
     .name-input::placeholder { color: #777e87; }
     .name-input.locked { border-color: rgba(255,104,112,.65); color: var(--pink); font-weight: 700; }
+    .remove-player { position: absolute; top: 50%; right: 10px; width: 22px; height: 22px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; color: var(--white); background: var(--coral-deep); font-family: Arial, sans-serif; font-size: 15px; line-height: 1; opacity: 0; transform: translateY(-50%) scale(.7); transition: opacity .12s ease, transform .12s ease; }
+    .name-row:hover .remove-player, .remove-player:focus-visible { opacity: 1; transform: translateY(-50%) scale(1); }
+    .remove-player:hover { background: var(--white); color: var(--ink); }
     .add-player {
       margin-top: 16px;
       border: 0;
@@ -330,6 +335,6 @@
       </div>
     </section>
   </main>
-  <script src="./sk8-runtime.js?v=20260918-7"></script>
+  <script src="./sk8-runtime.js?v=20260918-8"></script>
 </body>
 </html>
