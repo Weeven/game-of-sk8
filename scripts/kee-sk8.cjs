@@ -1,5 +1,5 @@
 const { execFile } = require('node:child_process');
-const { existsSync, mkdirSync, writeFileSync } = require('node:fs');
+const { existsSync, mkdirSync, readdirSync, writeFileSync } = require('node:fs');
 const { dirname, join, resolve } = require('node:path');
 const { pathToFileURL } = require('node:url');
 
@@ -8,7 +8,25 @@ const { pathToFileURL } = require('node:url');
   const candidateRoots = isPackaged
     ? [process.cwd(), dirname(process.execPath), dirname(process.argv[0] || '')].filter(Boolean)
     : [resolve(__dirname, '..')];
-  const appRoot = candidateRoots.find(root => existsSync(join(root, 'public', 'sk8.html')) && existsSync(join(root, 'scripts', 'sk8-server.mjs'))) || candidateRoots[0];
+
+  function hasAppFiles(root) {
+    return Boolean(root) && existsSync(join(root, 'public', 'sk8.html')) && existsSync(join(root, 'scripts', 'sk8-server.mjs'));
+  }
+
+  function findAppRoot() {
+    for (const root of [...new Set(candidateRoots)]) {
+      if (hasAppFiles(root)) return root;
+      try {
+        const child = readdirSync(root, { withFileTypes: true }).find(entry => entry.isDirectory() && hasAppFiles(join(root, entry.name)));
+        if (child) return join(root, child.name);
+      } catch {
+        // Continue with the next candidate when a parent folder cannot be listed.
+      }
+    }
+    return candidateRoots[0];
+  }
+
+  const appRoot = findAppRoot();
   process.env.SK8_PUBLIC_ROOT ||= join(appRoot, 'public');
   const dataRoot = isPackaged && process.env.APPDATA ? join(process.env.APPDATA, 'KeeSK8') : join(appRoot, '.data');
   process.env.SK8_DATA_FILE ||= join(dataRoot, 'sk8-sessions.json');
