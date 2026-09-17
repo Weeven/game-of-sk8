@@ -192,6 +192,9 @@
     .winner-check p { margin: 0; color: var(--white); font-size: 1rem; line-height: 1.2; text-transform: uppercase; }
     .winner-check strong { color: var(--pink); }
     .confirm-button { margin-top: 14px; padding: 13px 18px; font-size: 1rem; box-shadow: none; }
+    .game-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 18px; }
+    .reset-game { border: 0; padding: 8px 0; color: var(--pink); background: transparent; font-family: Arial, sans-serif; font-size: .82rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .reset-game:hover { color: var(--white); }
 
     .session-tools { margin-top: 12px; padding: 12px 14px; border: 1px solid rgba(22,26,33,.22); border-radius: 10px; background: rgba(22,26,33,.14); }
     .setup-session-tools { margin-top: 12px; }
@@ -211,6 +214,7 @@
     .winner-caption { margin: 0; color: var(--muted); font-family: Arial, sans-serif; font-size: .95rem; }
     .new-game { margin-top: 24px; border: 0; border-radius: 9px; padding: 12px 18px; color: var(--ink); background: var(--pink); font-family: Arial, sans-serif; font-size: .9rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; box-shadow: 0 6px 0 rgba(0,0,0,.2); }
     .new-game:hover { color: var(--ink); background: var(--white); transform: translateY(-1px); }
+    .game-actions .new-game { margin-top: 0; }
 
     .access-locked { min-height: 100vh; display: grid; place-items: center; padding: 24px; color: var(--white); background: transparent; text-align: center; }
     .access-locked > div { max-width: 360px; padding: 30px; border: 2px solid var(--coral-deep); border-radius: 14px; background: #000; }
@@ -245,6 +249,7 @@
     .overlay-mode .player-grid.count-2 .letters { width: 166px; }
     .overlay-mode .player-grid.count-2 .letter-slot { font-size: 1.82rem; }
     .overlay-mode .winner-check { display: none; }
+    .overlay-mode .game-actions { display: none; }
     .overlay-mode .letter-slot { cursor: default; }
     .overlay-mode .letter-slot.empty:hover { background: rgba(0,0,0,.23); color: rgba(255,247,240,.22); }
     .overlay-mode .remove-letter { display: none; }
@@ -299,6 +304,10 @@
           <p><strong id="last-player">Player</strong> is the last one standing.</p>
           <button class="confirm-button" id="confirm-winner" type="button">Confirm winner</button>
         </div>
+        <div class="game-actions" id="game-actions">
+          <button class="reset-game" id="reset-game" type="button">Reset game</button>
+          <button class="new-game" id="board-new-game" type="button">Start a new game</button>
+        </div>
       </div>
       <div class="session-tools" id="session-tools" hidden>
         <label for="overlay-url">OBS overlay link</label>
@@ -321,6 +330,6 @@
       </div>
     </section>
   </main>
-  <script src="./sk8-runtime.js?v=20260917-6"></script>
+  <script src="./sk8-runtime.js?v=20260918-7"></script>
 </body>
 </html>

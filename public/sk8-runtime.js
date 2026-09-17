@@ -254,8 +254,33 @@
     render();
   }
 
+  async function resetGame() {
+    if (!state.players.length) return;
+    state.players = state.players.map(player => ({ ...player, letters: [false, false, false], eliminated: false }));
+    state.pendingWinner = null;
+    state.screen = 'board';
+    state.winnerConfirmed = false;
+    await saveState();
+    render();
+  }
+
+  async function startNewGame() {
+    const blankPlayers = state.players.map(player => ({ ...player, letters: [...player.letters] }));
+    state.players = [];
+    state.pendingWinner = null;
+    state.screen = 'setup';
+    state.winnerConfirmed = false;
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* best effort */ }
+    resetSetupInputs();
+    // Keep the previous records in the remote setup state for one update so older cached
+    // overlays accept the screen change instead of ignoring an empty player list.
+    await pushRemoteState({ ...state, players: blankPlayers });
+    render();
+  }
+
   addPlayer.addEventListener('click', () => createNameInput());
   startGame.addEventListener('click', start);
+  $('reset-game').addEventListener('click', resetGame);
   async function copyOverlayLink(input, button) {
     if (!input?.value) return;
     try {
@@ -276,19 +301,8 @@
     saveState();
     render();
   });
-  $('new-game').addEventListener('click', async () => {
-    const blankPlayers = state.players.map(player => ({ ...player, letters: [...player.letters] }));
-    state.players = [];
-    state.pendingWinner = null;
-    state.screen = 'setup';
-    state.winnerConfirmed = false;
-    try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* best effort */ }
-    resetSetupInputs();
-    // Keep the previous records in the remote setup state for one update so older cached
-    // overlays accept the screen change instead of ignoring an empty player list.
-    await pushRemoteState({ ...state, players: blankPlayers });
-    render();
-  });
+  $('new-game').addEventListener('click', startNewGame);
+  $('board-new-game').addEventListener('click', startNewGame);
 
   window.addEventListener('storage', event => {
     if (event.key !== STORAGE_KEY || !isOverlay || isHttp) return;
