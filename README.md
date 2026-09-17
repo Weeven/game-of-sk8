@@ -18,6 +18,8 @@ The `KeeSK8.exe` launcher starts the local server on port 420 and opens the cont
 
 To build it locally, run `npm install` once and then `npm run package`. The finished executable is written to `dist/KeeSK8.exe` with its required `public` and `scripts` folders.
 
+The Windows installer definition is `installer/KeeSK8.iss`. Compile it with Inno Setup after building the release folder to create `dist/KeeSK8-Setup.exe`. The installer lets the streamer choose where KeeSK8 is installed and optionally adds the desktop shortcut.
+
 ## Hosting
 
 The front end can be served by GitHub Pages, but GitHub Pages cannot run the live session API. For real streams, run `scripts/sk8-server.mjs` (or move its small API to a serverless host with durable storage) and serve the `public` files from the same origin. The test server stores streamer identities and current game state in `.data/sk8-sessions.json`; a multi-streamer production host should use a real database or durable key-value store.
