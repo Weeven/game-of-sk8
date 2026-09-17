@@ -296,6 +296,13 @@
     render();
   });
 
+  window.addEventListener('beforeunload', event => {
+    if (isOverlay || !isHttp) return;
+    event.preventDefault();
+    event.returnValue = 'Closing this control page will not stop KeeSK8. Close the KeeSK8 app to stop the OBS overlay.';
+    return event.returnValue;
+  });
+
   async function init() {
     if (showUidRequired()) return;
     resetSetupInputs();
