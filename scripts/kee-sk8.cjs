@@ -1,10 +1,16 @@
 const { execFile } = require('node:child_process');
 const { existsSync, mkdirSync, readdirSync, writeFileSync } = require('node:fs');
-const { dirname, join, resolve } = require('node:path');
+const { basename, dirname, join, resolve } = require('node:path');
 const { pathToFileURL } = require('node:url');
 
 (async () => {
-  const isPackaged = Boolean(process.pkg || process.versions?.sea);
+  const executableName = basename(process.execPath || '').toLowerCase();
+  const isPackaged = Boolean(
+    process.pkg ||
+    process.versions?.sea ||
+    executableName === 'keesk8-core.exe' ||
+    executableName === 'keesk8.exe'
+  );
   const candidateRoots = isPackaged
     ? [process.cwd(), dirname(process.execPath), dirname(process.argv[0] || '')].filter(Boolean)
     : [resolve(__dirname, '..')];
