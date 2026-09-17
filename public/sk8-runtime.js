@@ -299,8 +299,17 @@
   window.addEventListener('beforeunload', event => {
     if (isOverlay || !isHttp) return;
     event.preventDefault();
-    event.returnValue = 'Closing this control page will not stop KeeSK8. Close the KeeSK8 app to stop the OBS overlay.';
+    event.returnValue = 'Closing this control page will stop KeeSK8 and remove the OBS overlay.';
     return event.returnValue;
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (isOverlay || !isHttp || !controlToken || gameId === 'local-demo') return;
+    fetch(`/api/sk8/stop?game=${encodeURIComponent(gameId)}`, {
+      method: 'POST',
+      headers: { 'X-SK8-Token': controlToken },
+      keepalive: true,
+    }).catch(() => {});
   });
 
   async function init() {

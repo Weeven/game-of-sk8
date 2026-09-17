@@ -96,6 +96,17 @@ const server = createServer((req, res) => {
     return json(res, 200, { gameId, overlayToken: session.overlayToken });
   }
 
+  if (pathname === '/api/sk8/stop' && req.method === 'POST') {
+    const session = games.get(gameId);
+    if (!session || req.headers['x-sk8-token'] !== session.controlToken) return json(res, 401, { error: 'Control access required' });
+    json(res, 200, { stopped: true });
+    setTimeout(() => {
+      server.close();
+      process.exit(0);
+    }, 100);
+    return;
+  }
+
   if (pathname === '/api/sk8/state' && req.method === 'GET') {
     const session = games.get(gameId);
     if (!session) return json(res, 404, { error: 'Game not found' });
