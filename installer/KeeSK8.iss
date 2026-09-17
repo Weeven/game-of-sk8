@@ -1,6 +1,6 @@
 #define MyAppName "KeeSK8"
 #define MyAppVersion "0.1.0"
-#define MyAppPublisher "KeeSK8"
+#define MyAppPublisher "Weeven"
 #define MyAppExeName "KeeSK8.exe"
 
 [Setup]
