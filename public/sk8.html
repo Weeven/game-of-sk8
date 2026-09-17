@@ -83,6 +83,12 @@
     .setup-obs-note { margin-top: 24px; padding: 12px 14px; border: 1px solid rgba(255,247,240,.15); border-radius: 10px; background: rgba(255,247,240,.04); color: var(--muted); font-family: Arial, sans-serif; font-size: .78rem; line-height: 1.4; }
     .setup-obs-note strong { display: block; margin-bottom: 5px; color: var(--pink); font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Narrow", sans-serif; font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; }
     .setup-obs-note p { margin: 0; }
+    .setup-session-tools { margin-top: 12px; padding: 12px 14px; border-color: rgba(255,247,240,.15); background: rgba(255,247,240,.04); }
+    .setup-session-tools label { color: var(--white); }
+    .setup-session-tools .session-help { color: var(--muted); }
+    .setup-session-tools .session-link-row input { border-color: rgba(255,247,240,.2); color: var(--white); background: var(--ink-soft); }
+    .setup-session-tools .session-link-row button { color: var(--ink); background: var(--pink); }
+    .setup-session-tools .session-link-row button:hover { color: var(--white); background: var(--coral-deep); }
 
     .name-list { display: grid; gap: 10px; }
     .name-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
@@ -280,14 +286,22 @@
         <button class="start-button" id="start-game" type="button" disabled>Start KeeSK8</button>
         <div class="setup-obs-note" aria-label="OBS instructions">
           <strong>OBS overlay</strong>
-          <p>After starting the game, copy the overlay link into OBS as a Browser Source. You only need to do this once. Keep KeeSK8 running while OBS is open. The copy button will appear on the next screen.</p>
+          <p>Copy the link below into OBS as a Browser Source. You only need to add it once. Keep KeeSK8 running while OBS is open. The same link works for every new game.</p>
+        </div>
+        <div class="session-tools setup-session-tools" id="setup-session-tools" hidden>
+          <label for="setup-overlay-url">OBS overlay link</label>
+          <p class="session-help">Paste this link into OBS as a Browser Source. If OBS ever loses the overlay, copy it again.</p>
+          <div class="session-link-row">
+            <input id="setup-overlay-url" type="text" readonly aria-label="OBS overlay link">
+            <button id="setup-copy-overlay" type="button">Copy</button>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="screen board-screen" id="board-screen" hidden aria-labelledby="board-title">
       <div class="board-head">
-        <div class="brand" id="board-title" aria-label="SK8">SK8</div>
+        <div class="brand" id="board-title" aria-label="KeeSK8">KeeSK8</div>
         <div class="board-label">Tap an empty letter<br>when a player misses</div>
       </div>
       <div class="panel board">
@@ -309,7 +323,7 @@
     </section>
 
     <section class="screen winner-screen" id="winner-screen" hidden aria-labelledby="winner-title">
-      <div class="brand" aria-hidden="true">SK8</div>
+      <div class="brand" aria-hidden="true">KeeSK8</div>
       <div class="panel winner-card">
         <span class="trophy" aria-hidden="true">🏆</span>
         <p class="winner-kicker">Winner</p>

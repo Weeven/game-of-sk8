@@ -23,6 +23,9 @@
   const addPlayer = $('add-player');
   const startGame = $('start-game');
   const grid = $('player-grid');
+  const setupSessionTools = $('setup-session-tools');
+  const setupOverlayUrl = $('setup-overlay-url');
+  const setupCopyOverlay = $('setup-copy-overlay');
   const sessionTools = $('session-tools');
   const overlayUrl = $('overlay-url');
   const copyOverlay = $('copy-overlay');
@@ -104,9 +107,16 @@
   }
 
   function updateSessionLinks() {
-    if (!sessionTools || isOverlay || !isHttp || !state.players.length) return;
-    sessionTools.hidden = false;
-    overlayUrl.value = makeOverlayUrl();
+    if (isOverlay || !isHttp || !overlayToken) return;
+    const url = makeOverlayUrl();
+    if (setupSessionTools) {
+      setupSessionTools.hidden = state.screen !== 'setup';
+      if (setupOverlayUrl) setupOverlayUrl.value = url;
+    }
+    if (sessionTools) {
+      sessionTools.hidden = state.screen !== 'board';
+      if (overlayUrl) overlayUrl.value = url;
+    }
   }
 
   function showUidRequired() {
@@ -206,6 +216,7 @@
   }
 
   function render() {
+    updateSessionLinks();
     if (state.screen === 'winner' && state.winnerConfirmed && state.players.length) {
       $('winner-title').textContent = state.players.find(player => !player.eliminated)?.name || 'Winner';
       show(winner);
@@ -236,16 +247,19 @@
 
   addPlayer.addEventListener('click', () => createNameInput());
   startGame.addEventListener('click', start);
-  copyOverlay?.addEventListener('click', async () => {
+  async function copyOverlayLink(input, button) {
+    if (!input?.value) return;
     try {
-      await navigator.clipboard.writeText(overlayUrl.value);
-      copyOverlay.textContent = 'Copied';
-      window.setTimeout(() => { copyOverlay.textContent = 'Copy'; }, 1400);
+      await navigator.clipboard.writeText(input.value);
+      button.textContent = 'Copied';
+      window.setTimeout(() => { button.textContent = 'Copy'; }, 1400);
     } catch (_) {
-      overlayUrl.select();
+      input.select();
       document.execCommand('copy');
     }
-  });
+  }
+  copyOverlay?.addEventListener('click', () => copyOverlayLink(overlayUrl, copyOverlay));
+  setupCopyOverlay?.addEventListener('click', () => copyOverlayLink(setupOverlayUrl, setupCopyOverlay));
   $('confirm-winner').addEventListener('click', () => {
     if (!state.pendingWinner) return;
     state.screen = 'winner';
@@ -272,6 +286,7 @@
   async function init() {
     if (showUidRequired()) return;
     resetSetupInputs();
+    if (isHttp && !isOverlay && !fixedUid && (!controlToken || gameId === 'local-demo')) await createRemoteSession();
     await loadSessionDetails();
     if (isHttp) await loadRemoteState();
     else readSavedState();
