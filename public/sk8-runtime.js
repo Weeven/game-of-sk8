@@ -35,7 +35,7 @@
   function readSavedState() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-      if (saved?.players?.length) Object.assign(state, saved);
+      if (saved && Array.isArray(saved.players)) Object.assign(state, saved);
     } catch (_) { /* Local file origins can restrict storage; the prototype still works in-tab. */ }
   }
 
