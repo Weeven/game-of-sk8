@@ -80,15 +80,6 @@
     h1, h2, p { margin-top: 0; }
     h2 { margin-bottom: 24px; color: var(--white); font-size: clamp(1.7rem, 6vw, 2.35rem); line-height: .95; text-transform: uppercase; }
     .setup-note { margin: -8px 0 24px; color: var(--muted); font-family: Arial, sans-serif; font-size: .9rem; line-height: 1.4; }
-    .setup-obs-note { margin-top: 24px; padding: 12px 14px; border: 1px solid rgba(255,247,240,.15); border-radius: 10px; background: rgba(255,247,240,.04); color: var(--muted); font-family: Arial, sans-serif; font-size: .78rem; line-height: 1.4; }
-    .setup-obs-note strong { display: block; margin-bottom: 5px; color: var(--pink); font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Narrow", sans-serif; font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; }
-    .setup-obs-note p { margin: 0; }
-    .setup-session-tools { margin-top: 12px; padding: 12px 14px; border-color: rgba(255,247,240,.15); background: rgba(255,247,240,.04); }
-    .setup-session-tools label { color: var(--white); }
-    .setup-session-tools .session-help { color: var(--muted); }
-    .setup-session-tools .session-link-row input { border-color: rgba(255,247,240,.2); color: var(--white); background: var(--ink-soft); }
-    .setup-session-tools .session-link-row button { color: var(--ink); background: var(--pink); }
-    .setup-session-tools .session-link-row button:hover { color: var(--white); background: var(--coral-deep); }
 
     .name-list { display: grid; gap: 10px; }
     .name-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
@@ -197,12 +188,13 @@
     .letter-slot.filled:hover .remove-letter, .letter-slot.filled:focus-within .remove-letter { opacity: 1; transform: scale(1); }
     .letter-slot.filled .remove-letter:focus-visible { opacity: 1; transform: scale(1); }
 
-    .winner-check { margin-top: 18px; padding: 18px; border: 1px solid var(--pink); border-radius: 12px; background: rgba(255,104,112,.11); text-align: center; }
+    .winner-check { margin-top: 18px; padding: 18px; border: 1px solid var(--pink); border-radius: 12px; background: var(--ink-soft); text-align: center; }
     .winner-check p { margin: 0; color: var(--white); font-size: 1rem; line-height: 1.2; text-transform: uppercase; }
     .winner-check strong { color: var(--pink); }
     .confirm-button { margin-top: 14px; padding: 13px 18px; font-size: 1rem; box-shadow: none; }
 
     .session-tools { margin-top: 12px; padding: 12px 14px; border: 1px solid rgba(22,26,33,.22); border-radius: 10px; background: rgba(22,26,33,.14); }
+    .setup-session-tools { margin-top: 12px; }
     .session-tools label { display: block; margin-bottom: 7px; color: var(--ink); font-family: Arial, sans-serif; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     .session-help { margin: -1px 0 9px; color: rgba(22,26,33,.8); font-family: Arial, sans-serif; font-size: .76rem; line-height: 1.35; }
     .board-obs-note { margin: 0 0 14px; color: var(--muted); font-family: Arial, sans-serif; font-size: .78rem; line-height: 1.4; }
@@ -212,13 +204,13 @@
     .session-link-row button:hover { background: var(--coral-deep); }
 
     .winner-screen { text-align: center; }
-    .winner-card { padding: clamp(28px, 8vw, 52px) 24px 30px; }
+    .winner-card { padding: clamp(28px, 8vw, 52px) 24px 30px; background: var(--ink-soft); border-color: var(--pink); }
     .trophy { display: block; margin: 0 auto 17px; color: var(--pink); font-family: Arial, sans-serif; font-size: 4.5rem; line-height: 1; }
     .winner-kicker { margin-bottom: 13px; color: var(--pink); font-size: 1rem; letter-spacing: .16em; text-transform: uppercase; }
-    .winner-name { margin-bottom: 10px; color: var(--white); font-size: clamp(3rem, 14vw, 6rem); line-height: .86; text-transform: uppercase; overflow-wrap: anywhere; }
+    .winner-name { margin-bottom: 10px; color: var(--white); font-size: clamp(2.6rem, 12vw, 5.2rem); line-height: .86; text-transform: uppercase; overflow-wrap: anywhere; }
     .winner-caption { margin: 0; color: var(--muted); font-family: Arial, sans-serif; font-size: .95rem; }
-    .new-game { margin-top: 24px; border: 0; color: var(--pink); background: transparent; font-family: Arial, sans-serif; font-weight: 700; }
-    .new-game:hover { color: var(--white); }
+    .new-game { margin-top: 24px; border: 0; border-radius: 9px; padding: 12px 18px; color: var(--ink); background: var(--pink); font-family: Arial, sans-serif; font-size: .9rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; box-shadow: 0 6px 0 rgba(0,0,0,.2); }
+    .new-game:hover { color: var(--ink); background: var(--white); transform: translateY(-1px); }
 
     .access-locked { min-height: 100vh; display: grid; place-items: center; padding: 24px; color: var(--white); background: transparent; text-align: center; }
     .access-locked > div { max-width: 360px; padding: 30px; border: 2px solid var(--coral-deep); border-radius: 14px; background: #000; }
@@ -256,9 +248,9 @@
     .overlay-mode .letter-slot { cursor: default; }
     .overlay-mode .letter-slot.empty:hover { background: rgba(0,0,0,.23); color: rgba(255,247,240,.22); }
     .overlay-mode .remove-letter { display: none; }
-    .overlay-mode .winner-card { max-width: 520px; margin: 0 auto; background: rgba(22,26,33,.94); }
+    .overlay-mode .winner-card { max-width: 520px; margin: 0 auto; background: #000; }
     .overlay-mode .trophy { font-size: 4rem; }
-    .overlay-mode .winner-name { font-size: clamp(2.4rem, 9vw, 4.5rem); }
+    .overlay-mode .winner-name { font-size: clamp(2.2rem, 8vw, 4.2rem); }
     .overlay-mode .winner-caption, .overlay-mode .new-game { display: none; }
     .overlay-mode #board-screen[hidden], .overlay-mode #winner-screen[hidden] { display: none; }
 
@@ -284,17 +276,13 @@
         <div class="name-list" id="name-list"></div>
         <button class="add-player" id="add-player" type="button">+ Add player</button>
         <button class="start-button" id="start-game" type="button" disabled>Start KeeSK8</button>
-        <div class="setup-obs-note" aria-label="OBS instructions">
-          <strong>OBS overlay</strong>
-          <p>Copy the link below into OBS as a Browser Source. You only need to add it once. Keep KeeSK8 running while OBS is open. The same link works for every new game.</p>
-        </div>
-        <div class="session-tools setup-session-tools" id="setup-session-tools" hidden>
-          <label for="setup-overlay-url">OBS overlay link</label>
-          <p class="session-help">Paste this link into OBS as a Browser Source. If OBS ever loses the overlay, copy it again.</p>
-          <div class="session-link-row">
-            <input id="setup-overlay-url" type="text" readonly aria-label="OBS overlay link">
-            <button id="setup-copy-overlay" type="button">Copy</button>
-          </div>
+      </div>
+      <div class="session-tools setup-session-tools" id="setup-session-tools" hidden>
+        <label for="setup-overlay-url">OBS overlay link</label>
+        <p class="session-help">Copy this KeeSK8 link into OBS as a Browser Source. You only need to do this once. Keep KeeSK8 running while OBS is open. If OBS ever loses the overlay, copy the link again.</p>
+        <div class="session-link-row">
+          <input id="setup-overlay-url" type="text" readonly aria-label="OBS overlay link">
+          <button id="setup-copy-overlay" type="button">Copy</button>
         </div>
       </div>
     </section>
