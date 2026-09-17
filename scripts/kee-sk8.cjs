@@ -5,9 +5,13 @@ const { pathToFileURL } = require('node:url');
 
 (async () => {
   const isPackaged = Boolean(process.pkg || process.versions?.sea);
-  const appRoot = isPackaged ? dirname(process.execPath) : resolve(__dirname, '..');
+  const candidateRoots = isPackaged
+    ? [process.cwd(), dirname(process.execPath), dirname(process.argv[0] || '')].filter(Boolean)
+    : [resolve(__dirname, '..')];
+  const appRoot = candidateRoots.find(root => existsSync(join(root, 'public', 'sk8.html')) && existsSync(join(root, 'scripts', 'sk8-server.mjs'))) || candidateRoots[0];
   process.env.SK8_PUBLIC_ROOT ||= join(appRoot, 'public');
-  process.env.SK8_DATA_FILE ||= join(appRoot, '.data', 'sk8-sessions.json');
+  const dataRoot = isPackaged && process.env.APPDATA ? join(process.env.APPDATA, 'KeeSK8') : join(appRoot, '.data');
+  process.env.SK8_DATA_FILE ||= join(dataRoot, 'sk8-sessions.json');
 
   const { startServer } = await import(pathToFileURL(join(appRoot, 'scripts', 'sk8-server.mjs')).href);
   const server = startServer();
