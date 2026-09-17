@@ -1,13 +1,32 @@
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
 const port = Number(process.argv[2] ?? process.env.SK8_PORT ?? 8791);
+const dataFile = resolve(process.env.SK8_DATA_FILE ?? '.data/sk8-sessions.json');
 const games = new Map();
 
 const emptyGame = () => ({ players: [], pendingWinner: null, screen: 'setup', winnerConfirmed: false });
+
+function loadSessions() {
+  try {
+    const saved = JSON.parse(readFileSync(dataFile, 'utf8'));
+    for (const [gameId, session] of Object.entries(saved)) {
+      if (session?.controlToken && session?.overlayToken && session?.state) games.set(gameId, session);
+    }
+  } catch (_) { /* a first run starts with an empty session store */ }
+}
+
+function persistSessions() {
+  try {
+    mkdirSync(dirname(dataFile), { recursive: true });
+    writeFileSync(dataFile, JSON.stringify(Object.fromEntries(games), null, 2));
+  } catch (_) { /* the UI still works when the host filesystem is read-only */ }
+}
+
 games.set('local-demo', { controlToken: null, overlayToken: null, state: emptyGame() });
+loadSessions();
 
 const uid = (bytes = 16) => randomBytes(bytes).toString('base64url');
 
@@ -16,6 +35,7 @@ function createSession() {
   while (games.has(gameId)) gameId = uid(9);
   const session = { controlToken: uid(32), overlayToken: uid(32), state: emptyGame() };
   games.set(gameId, session);
+  persistSessions();
   return { gameId, controlToken: session.controlToken, overlayToken: session.overlayToken };
 }
 
@@ -92,6 +112,7 @@ const server = createServer((req, res) => {
       try {
         const game = cleanState(JSON.parse(body));
         session.state = game;
+        persistSessions();
         json(res, 200, game);
       } catch (_) { json(res, 400, { error: 'Invalid game state' }); }
     });
