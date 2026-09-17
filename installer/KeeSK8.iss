@@ -8,7 +8,7 @@ AppId={{E6C1F8D7-8C7B-4B7D-9B8D-5EE58A001001}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={localappdata}\KeeSK8
+DefaultDirName={autopf}\KeeSK8
 DefaultGroupName=KeeSK8
 DisableProgramGroupPage=yes
 OutputDir=..\dist
@@ -19,7 +19,7 @@ Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
 ArchitecturesInstallIn64BitMode=x64
-PrivilegesRequired=lowest
+PrivilegesRequired=admin
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional shortcuts:"; Flags: unchecked

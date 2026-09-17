@@ -18,7 +18,7 @@ The `KeeSK8.exe` launcher starts the local server on port 420 and opens the cont
 
 To build it locally, run `npm install` once and then `npm run package`. The finished executable is written to `dist/KeeSK8.exe` with its required `public` and `scripts` folders.
 
-The Windows installer definition is `installer/KeeSK8.iss`. Compile it with Inno Setup after building the release folder to create `dist/KeeSK8-Setup.exe`. It defaults to the user’s local app-data folder, so administrator access is not required, while still letting the streamer choose another install location and optionally add the desktop shortcut.
+The Windows installer definition is `installer/KeeSK8.iss`. Compile it with Inno Setup after building the release folder to create `dist/KeeSK8-Setup.exe`. It defaults to `C:\Program Files\KeeSK8` and uses the normal Windows administrator prompt, while still letting the streamer choose another install location and optionally add the desktop shortcut.
 
 ## Hosting
 
