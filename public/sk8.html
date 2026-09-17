@@ -80,6 +80,9 @@
     h1, h2, p { margin-top: 0; }
     h2 { margin-bottom: 24px; color: var(--white); font-size: clamp(1.7rem, 6vw, 2.35rem); line-height: .95; text-transform: uppercase; }
     .setup-note { margin: -8px 0 24px; color: var(--muted); font-family: Arial, sans-serif; font-size: .9rem; line-height: 1.4; }
+    .setup-obs-note { margin-top: 24px; padding: 12px 14px; border: 1px solid rgba(255,247,240,.15); border-radius: 10px; background: rgba(255,247,240,.04); color: var(--muted); font-family: Arial, sans-serif; font-size: .78rem; line-height: 1.4; }
+    .setup-obs-note strong { display: block; margin-bottom: 5px; color: var(--pink); font-family: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Narrow", sans-serif; font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; }
+    .setup-obs-note p { margin: 0; }
 
     .name-list { display: grid; gap: 10px; }
     .name-row { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 10px; }
@@ -275,6 +278,10 @@
         <div class="name-list" id="name-list"></div>
         <button class="add-player" id="add-player" type="button">+ Add player</button>
         <button class="start-button" id="start-game" type="button" disabled>Start KeeSK8</button>
+        <div class="setup-obs-note" aria-label="OBS instructions">
+          <strong>OBS overlay</strong>
+          <p>After starting the game, copy the overlay link into OBS as a Browser Source. You only need to do this once. Keep KeeSK8 running while OBS is open. The copy button will appear on the next screen.</p>
+        </div>
       </div>
     </section>
 

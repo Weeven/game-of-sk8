@@ -70,13 +70,16 @@ const { pathToFileURL } = require('node:url');
 
       if (!prompt.error && prompt.output === 'YES') {
         const executable = process.execPath;
+        const hiddenLauncher = join(appRoot, 'scripts', 'KeeSK8-hidden.vbs');
         const desktopResult = await runPowerShell('[Environment]::GetFolderPath(\'Desktop\')');
         if (!desktopResult.error && desktopResult.output) {
           const desktopShortcut = join(desktopResult.output, 'KeeSK8.lnk');
+          const windowsScriptHost = join(process.env.WINDIR || 'C:\\Windows', 'System32', 'wscript.exe');
           await runPowerShell(`
             $shell = New-Object -ComObject WScript.Shell
             $shortcut = $shell.CreateShortcut(${powershellString(desktopShortcut)})
-            $shortcut.TargetPath = ${powershellString(executable)}
+            $shortcut.TargetPath = ${powershellString(existsSync(hiddenLauncher) ? windowsScriptHost : executable)}
+            $shortcut.Arguments = ${powershellString(existsSync(hiddenLauncher) ? `"${hiddenLauncher}"` : '')}
             $shortcut.WorkingDirectory = ${powershellString(appRoot)}
             $shortcut.IconLocation = ${powershellString(`${executable},0`) }
             $shortcut.Description = 'Start the KeeSK8 streamer game and local OBS overlay server'
