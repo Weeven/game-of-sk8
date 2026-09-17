@@ -68,9 +68,9 @@
     show(setup);
   }
 
-  async function pushRemoteState() {
+  async function pushRemoteState(nextState = state) {
     try {
-      await fetch(`/api/sk8/state?game=${encodeURIComponent(gameId)}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(state) });
+      await fetch(`/api/sk8/state?game=${encodeURIComponent(gameId)}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...authHeaders() }, body: JSON.stringify(nextState) });
     } catch (_) { /* local preview can fall back to browser storage */ }
   }
 
@@ -277,13 +277,16 @@
     render();
   });
   $('new-game').addEventListener('click', async () => {
+    const blankPlayers = state.players.map(player => ({ ...player, letters: [...player.letters] }));
     state.players = [];
     state.pendingWinner = null;
     state.screen = 'setup';
     state.winnerConfirmed = false;
     try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* best effort */ }
     resetSetupInputs();
-    await saveState();
+    // Keep the previous records in the remote setup state for one update so older cached
+    // overlays accept the screen change instead of ignoring an empty player list.
+    await pushRemoteState({ ...state, players: blankPlayers });
     render();
   });
 
