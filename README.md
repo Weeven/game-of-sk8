@@ -7,10 +7,10 @@ A lightweight SK8 letter tracker for a streamer’s control window and OBS brows
 Requires Node.js 18 or newer.
 
 ```text
-node scripts/sk8-server.mjs 8792
+node scripts/sk8-server.mjs
 ```
 
-Open `http://127.0.0.1:8792/sk8` for the control window. After starting the first game, copy the generated OBS overlay link into OBS once. The “Start a new game” action reuses that same link and replaces only the game state behind it. The control link contains a private control token; the overlay link contains a separate read-only token.
+Open `http://127.0.0.1:420/sk8` for the control window. Add `http://127.0.0.1:420/sk8-overlay` to OBS once. The “Start a new game” action reuses that same local URL and replaces only the game state behind it. The control link contains a private control token; the overlay link contains a separate read-only token.
 
 ## Hosting
 

@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
-const port = Number(process.argv[2] ?? process.env.SK8_PORT ?? 8791);
+const port = Number(process.argv[2] ?? process.env.SK8_PORT ?? 420);
 const dataFile = resolve(process.env.SK8_DATA_FILE ?? '.data/sk8-sessions.json');
 const games = new Map();
 
