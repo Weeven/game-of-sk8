@@ -5,9 +5,12 @@
   const params = new URLSearchParams(window.location.search);
   const isOverlay = params.get('mode') === 'overlay' || window.location.hash === '#overlay' || /sk8-overlay(?:\.html)?$/.test(window.location.pathname);
   const isHttp = window.location.protocol === 'http:' || window.location.protocol === 'https:';
-  let gameId = params.get('game') || 'local-demo';
-  let controlToken = params.get('control') || '';
-  let overlayToken = params.get('overlay') || '';
+  const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const requiresUid = isHttp && !isLocalHost;
+  const fixedUid = params.get('uid') || '';
+  let gameId = params.get('game') || (fixedUid ? 'keeskatez' : 'local-demo');
+  let controlToken = params.get('control') || (!isOverlay ? fixedUid : '');
+  let overlayToken = params.get('overlay') || (isOverlay ? fixedUid : '');
   const state = { players: [], pendingWinner: null, screen: 'setup', winnerConfirmed: false };
 
   document.body.classList.toggle('overlay-mode', isOverlay);
@@ -89,12 +92,13 @@
 
   function makeOverlayUrl() {
     const nextUrl = new URL(window.location.href);
-    if (/sk8(?:\.html)?$/.test(nextUrl.pathname)) nextUrl.pathname = nextUrl.pathname.replace(/sk8(?:\.html)?$/, 'sk8-overlay');
+    if (/sk8(?:\.html)?$/.test(nextUrl.pathname)) nextUrl.pathname = nextUrl.pathname.replace(/sk8(?:\.html)?$/, nextUrl.pathname.endsWith('.html') ? 'sk8-overlay.html' : 'sk8-overlay');
     nextUrl.searchParams.set('game', gameId);
     nextUrl.searchParams.set('mode', 'overlay');
     nextUrl.searchParams.delete('control');
-    if (overlayToken) nextUrl.searchParams.set('overlay', overlayToken);
-    else nextUrl.searchParams.delete('overlay');
+    if (overlayToken) nextUrl.searchParams.set('uid', overlayToken);
+    else nextUrl.searchParams.delete('uid');
+    nextUrl.searchParams.delete('overlay');
     nextUrl.hash = '';
     return nextUrl.toString();
   }
@@ -103,6 +107,12 @@
     if (!sessionTools || isOverlay || !isHttp || !state.players.length) return;
     sessionTools.hidden = false;
     overlayUrl.value = makeOverlayUrl();
+  }
+
+  function showUidRequired() {
+    if (!requiresUid || fixedUid) return false;
+    document.body.innerHTML = '<main class="access-locked"><div><div class="locked-mark">SK8</div><h1>Private game link required</h1><p>This SK8 board is only available from the streamer\'s private link.</p></div></main>';
+    return true;
   }
 
   function createNameInput(value = '', locked = false) {
@@ -212,7 +222,7 @@
   async function start() {
     const names = [...list.querySelectorAll('input')].map(input => input.value.trim()).filter(Boolean);
     const kee = names.shift() || 'KeeSkatez';
-    if (isHttp && !isOverlay && (!controlToken || gameId === 'local-demo') && !(await createRemoteSession())) {
+    if (isHttp && !isOverlay && !fixedUid && (!controlToken || gameId === 'local-demo') && !(await createRemoteSession())) {
       window.alert('Could not create a game session. Check that the SK8 server is running.');
       return;
     }
@@ -260,6 +270,7 @@
   });
 
   async function init() {
+    if (showUidRequired()) return;
     resetSetupInputs();
     await loadSessionDetails();
     if (isHttp) await loadRemoteState();

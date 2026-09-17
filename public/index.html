@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SK8 OBS Overlay</title>
+  <title>SK8</title>
 </head>
 <body>
-  <p>Loading SK8 overlay…</p>
+  <p>Loading SK8…</p>
   <script>
     const target = new URL('./sk8.html', window.location.href);
-    const params = new URLSearchParams(window.location.search);
-    params.set('mode', 'overlay');
-    target.search = params.toString();
+    target.search = window.location.search;
+    target.hash = window.location.hash;
     window.location.replace(target);
   </script>
 </body>

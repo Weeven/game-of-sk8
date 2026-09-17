@@ -209,6 +209,12 @@
     .new-game { margin-top: 24px; border: 0; color: var(--pink); background: transparent; font-family: Arial, sans-serif; font-weight: 700; }
     .new-game:hover { color: var(--white); }
 
+    .access-locked { min-height: 100vh; display: grid; place-items: center; padding: 24px; color: var(--white); background: transparent; text-align: center; }
+    .access-locked > div { max-width: 360px; padding: 30px; border: 2px solid var(--coral-deep); border-radius: 14px; background: #000; }
+    .locked-mark { margin-bottom: 18px; color: var(--coral-deep); font-size: 3.5rem; line-height: .8; }
+    .access-locked h1 { margin: 0 0 12px; font-size: 1.5rem; text-transform: uppercase; }
+    .access-locked p { margin: 0; color: var(--muted); font-family: Arial, sans-serif; font-size: .9rem; line-height: 1.4; }
+
     /* OBS/browser-source mode: only the scoreboard is visible and the page itself stays transparent. */
     body.overlay-mode { background: transparent; }
     .overlay-mode .app { display: block; min-height: 100vh; padding: 8px 8px 20px; }
